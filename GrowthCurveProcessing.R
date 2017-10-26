@@ -78,7 +78,8 @@ fit_mdl_lm <- function(d,modelfunction,par_init){
   print(fit)
   predicted <- data.frame('t'=d$t,
                           'y_fit'=modelfunction(d$t,fit$par))
-  return(predicted)
+  return(list('par_fit' = c(fit$par),
+              'y_fit' = predicted))
 }
 
 #Plotting function to show fit for 1 well
@@ -221,7 +222,8 @@ GrowthcurveFit<-function(filename,sheet=1,grMod="Richards",par_est=list('mu'=NUL
     
     #Pre-estimation of parameters to get better fits of the growth curve models
     par_est_i<-par_est
-    ## ?
+    ## If no initial guess for mu is given by the user, a mu is estimated by taking the maximum of the derivative
+    ## of a smoothed spline to the dataset.
     {if(is.null(par_est$mu)){
       par_est_i$mu<-max(predict(smooth.spline(time,lOD),time,deriv=1)$y)
       }
