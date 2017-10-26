@@ -89,11 +89,17 @@ single_plot <- function(fit_data,title){
     geom_point() +
     geom_line(aes(x=t,y=y_fit), col="black",lty=2) +
     ylab(expression(ln~(OD/OD[0]))) + 
-    ylim(-1,lim) +
+    #ylim(-1,lim) +
     xlab('t (h)') +
+    expand_limits(y=0) +
+    scale_y_continuous(expand=c(0,0),limits=c(-1,lim))+
+    expand_limits(x=0) +
+    scale_x_continuous(expand=c(0,0),limits=c(0,100))+
     ggtitle(title) +
     theme_bw()+
-    theme(panel.grid.major=element_blank())
+    theme(panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          axis.ticks=element_blank())
 }
 
 # Functions to allow the use of different growth models in GrowthCurveFit
@@ -255,7 +261,7 @@ GrowthcurveFit<-function(filename,sheet=1,grMod="Richards",par_est=list('mu'=NUL
     
     #Fitting of model to data
     fit<- fit_mdl_lm(d_well,model,par_init=InitialPar(grMod,mu=par_est_i$mu,A=par_est_i$A,lambda=par_est_i$lambda))
-    par[i,]<-c(OutputPar(grMod,fit), fit$Rsq,grMod)
+    par[i,]<-c(OutputPar(grMod,fit),grMod)
     d_fit<- cbind(d_well, fit$y_fit)
     colnames(d_fit) <- c("t","y","y_fit")
     
