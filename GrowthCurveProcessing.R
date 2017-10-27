@@ -217,8 +217,7 @@ GrowthcurveFit<-function(filename,sheet=1,grMod="Richards",par_est=list('mu'=NUL
     OD<-d[,i+1]
     OD<-replace(OD,OD<0.0001,0.0001)
     lOD<-log(OD/OD[1])    #Log-transformation of data
-    d_well<-data.frame(t=time,
-                  y=lOD)
+    d_well<-data.frame(t=time,y=lOD)
     
     #Pre-estimation of parameters to get better fits of the growth curve models
     par_est_i<-par_est
@@ -254,8 +253,7 @@ GrowthcurveFit<-function(filename,sheet=1,grMod="Richards",par_est=list('mu'=NUL
       }
       if (par_est_i$A==0){
         par_est_i$A<-log(10)
-      }
-    }
+      }}
     else{
       par_est_i$A<-par_est$A
       }
@@ -264,7 +262,7 @@ GrowthcurveFit<-function(filename,sheet=1,grMod="Richards",par_est=list('mu'=NUL
     #Fitting of model to data
     fit<- fit_mdl_lm(d_well,model,par_init=InitialPar(grMod,mu=par_est_i$mu,A=par_est_i$A,lambda=par_est_i$lambda))
     par[i,]<-c(OutputPar(grMod,fit),grMod)
-    d_fit<- cbind(d_well, fit$y_fit)
+    d_fit<- cbind(d_well, fit$y_fit$y_fit)
     colnames(d_fit) <- c("t","y","y_fit")
     
     #Plot of fit to well i
